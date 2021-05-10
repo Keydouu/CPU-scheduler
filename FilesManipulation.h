@@ -11,6 +11,9 @@ struct CPUtable
 {
 	int *entreeSortie,*fileAttente;
 };
+void fileInitialisation(FILE* fp, int numberOfLines);
+void GoToLine(FILE* fp,int lineNumber);
+void writeInMiddleOfFile(FILE* fp, char* charTable, int charTableSize);
 int readNumber (FILE* fichier);
 int numberOfTasks(FILE* fichier);
 task tasksReader(FILE* fichier);
