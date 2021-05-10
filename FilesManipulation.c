@@ -1,6 +1,58 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "FilesManipulation.h"
+void fileInitialisation(FILE* fp, int numberOfLines)
+{
+    char c;
+    c='\n';
+    while(numberOfLines>0)
+    {
+        fputc(c,fp);
+        numberOfLines--;
+    }
+}
+void GoToLine(FILE* fp,int lineNumber)
+{
+	char c=32;
+	rewind(fp);
+	while(lineNumber)
+	{
+		c=fgetc(fp);
+		if ((c=='\n')||(c==EOF))
+			lineNumber--;
+	}
+	if(c!=EOF)
+        fseek(fp,-1,SEEK_CUR);
+}
+int fileSize(FILE* f,int sizeOfVariable)
+{
+	fseek(f,0,SEEK_END);
+	return (ftell(f)/sizeOfVariable);
+}
+void writeInMiddleOfFile(FILE* fp, char* charTable, int charTableSize)
+{
+    char* memory;
+    int i=0,j;
+    char c=10;
+    while(c!=EOF)
+    {
+        c=fgetc(fp);
+        i++;
+    }
+    c=',';
+    i--;
+    fseek(fp,-i,SEEK_END);
+    memory=(char*)malloc(i*sizeof(char));
+    for(j=0;j<i;j++)
+        memory[j]=fgetc(fp);
+    fseek(fp,-i,SEEK_END);
+    fputc(c,fp);
+    for(j=0;j<charTableSize;j++)
+        fputc(charTable[j],fp);
+    for(j=0;j<i;j++)
+        fputc(memory[j],fp);
+    fseek(fp,-i,SEEK_END);
+}
 int readNumber (FILE* fichier)
 {
 	char c=0;
@@ -54,29 +106,38 @@ task tasksReader(FILE* fichier)
 }
 void writeFromCPUtoFile(FILE* fichier,task* T_tasks,CPUtable CPU,int Qsize)
 {
-	char c;
-	int i;
-	c=fgetc(fichier);
+	int i,j;
 	rewind(fichier);
 	for(i=0;i<(2*Qsize);i++)
 	{
-		while((c!=10)&&(c!=EOF))
-			c=fgetc(fichier);
-		fseek( fichier, -1, SEEK_CUR );
+		j=2;
 		if(i<Qsize)
 		{
+			GoToLine(fichier,(Qsize-i));
 			if(CPU.entreeSortie[i]>=0)
-				fprintf(fichier, ",%s",(T_tasks+CPU.entreeSortie[i])->Name);
+			{
+				if((T_tasks+CPU.entreeSortie[i])->Name[1]==0)
+					j=1;
+				writeInMiddleOfFile(fichier,(T_tasks+CPU.entreeSortie[i])->Name,j);
+			}
 			else
-				fprintf(fichier, ",");
+			{
+				writeInMiddleOfFile(fichier,0,0);
+			}
 		}
 		else
 		{
+			GoToLine(fichier,(3*Qsize-i));
 			if(CPU.fileAttente[i-Qsize]>=0)
-				fprintf(fichier, ",%s",(T_tasks+CPU.fileAttente[i-Qsize])->Name);
+			{
+				if((T_tasks+CPU.fileAttente[i-Qsize])->Name[1]==0)
+					j=1;
+				writeInMiddleOfFile(fichier,(T_tasks+CPU.fileAttente[i-Qsize])->Name,j);
+			}
 			else
-				fprintf(fichier, ",");
+			{
+				writeInMiddleOfFile(fichier,0,0);
+			}
 		}
-		c=fgetc(fichier);
 	}
 }
