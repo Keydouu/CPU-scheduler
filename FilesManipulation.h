@@ -11,6 +11,7 @@ struct CPUtable
 {
 	int *entreeSortie,*fileAttente;
 };
+FILE* createFile(int Algorithm, int preemption);
 void fileInitialisation(FILE* fp, int numberOfLines);
 void GoToLine(FILE* fp,int lineNumber);
 void writeInMiddleOfFile(FILE* fp, char* charTable, int charTableSize);
