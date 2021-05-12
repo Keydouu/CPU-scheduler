@@ -75,7 +75,7 @@ void scheduling(task* T_tasks,int tasksNumber,int algorithm ,int preemption)
 				if((T_tasks+CPU.fileAttente[0])->inOutLength>0)//si elle a une durée d'entrée sortie
 				{
 					for(i=0;CPU.entreeSortie[i]>=0;i++);//on cherche la celule libre en E/S
-                        CPU.entreeSortie[i]=CPU.fileAttente[0];//on y met la tache qui était active
+					CPU.entreeSortie[i]=CPU.fileAttente[0];//on y met la tache qui était active
 				}
 				QueueDown(CPU.fileAttente,tasksNumber);
 			}
@@ -98,7 +98,7 @@ void scheduling(task* T_tasks,int tasksNumber,int algorithm ,int preemption)
 			}
 		}
 		if(CPU.fileAttente[0]<0)
-            QueueDown(CPU.fileAttente,tasksNumber);
+			QueueDown(CPU.fileAttente,tasksNumber);
 		continueTasks=0;
 		i=0;
 		while((i<tasksNumber)&&(continueTasks==0))
