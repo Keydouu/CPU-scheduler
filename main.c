@@ -16,21 +16,33 @@ int main()
 	T_tasks=(task*)malloc(sizeof(task)*tasksNumber);
 	for(i=0;i<tasksNumber;i++)
 		*(T_tasks+i)=tasksReader(inputFile);
-	for(i=0;i<tasksNumber;i++)//on verifie que la lecture à partir du fichier a fonctionné
-		printf("%s E=%d D=%d P=%d E/S=%d\n",(T_tasks+i)->Name,(T_tasks+i)->entry,(T_tasks+i)->length,(T_tasks+i)->priority,(T_tasks+i)->inOutLength);
-	//sleep(5);
-	/*FCFS(T_tasks,tasksNumber);
-	for(i=0;i<tasksNumber;i++)
-		*(T_tasks+i)=tasksReader(inputFile);*/
-	SJF(T_tasks,tasksNumber,0);
-	/*rewind(inputFile);
+
+	scheduling(T_tasks,tasksNumber,1,0);
+	
+	rewind(inputFile);
 	for(i=0;i<tasksNumber;i++)
 		*(T_tasks+i)=tasksReader(inputFile);
-	SJF(T_tasks,tasksNumber,1);*/
-	/*for(i=0;i<tasksNumber;i++)
+	
+	scheduling(T_tasks,tasksNumber,2,0);
+	
+	rewind(inputFile);
+	for(i=0;i<tasksNumber;i++)
 		*(T_tasks+i)=tasksReader(inputFile);
-	fclose(inputFile);
-	tourniquet(T_tasks,tasksNumber);*/
+	
+	scheduling(T_tasks,tasksNumber,2,1);
+	
+	rewind(inputFile);
+	for(i=0;i<tasksNumber;i++)
+		*(T_tasks+i)=tasksReader(inputFile);
+	
+	scheduling(T_tasks,tasksNumber,3,0);
+	
+	rewind(inputFile);
+	for(i=0;i<tasksNumber;i++)
+		*(T_tasks+i)=tasksReader(inputFile);
+	
+	scheduling(T_tasks,tasksNumber,3,1);
+	
 	fclose(inputFile);
 	return 0;
 }
