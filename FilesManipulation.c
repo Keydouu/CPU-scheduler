@@ -1,6 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "FilesManipulation.h"
+FILE* createFile(int Algorithm, int preemption)
+{
+    FILE* fp=NULL;
+    switch(Algorithm) {
+      case 1 :
+            fp=fopen("FCFS","w+");
+         break;
+      case 2 :
+        if (preemption)
+            fp=fopen("SFJavecPreemption","w+");
+        else
+            fp=fopen("SFJsansPreemption","w+");
+         break;
+      case 3 :
+        if (preemption)
+            fp=fopen("PrioavecPreemption","w+");
+        else
+            fp=fopen("PriosansPreemption","w+");
+         break;
+      case 4 :
+        if (preemption)
+            fp=fopen("RRavecPreemption","w+");
+        else
+            fp=fopen("RRsansPreemption","w+");
+         break;
+   }
+    return fp;
+}
 void fileInitialisation(FILE* fp, int numberOfLines)
 {
     char c;
@@ -23,6 +51,11 @@ void GoToLine(FILE* fp,int lineNumber)
 	}
 	if(c!=EOF)
         fseek(fp,-1,SEEK_CUR);
+}
+int fileSize(FILE* f,int sizeOfVariable)
+{
+	fseek(f,0,SEEK_END);
+	return (ftell(f)/sizeOfVariable);
 }
 void writeInMiddleOfFile(FILE* fp, char* charTable, int charTableSize)
 {
