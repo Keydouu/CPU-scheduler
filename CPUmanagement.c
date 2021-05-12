@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "CPUmanagement.h"
-void OrgranisationDeFile(int* Q,int Qsize,task* T,int newTask)
+void OrgranisationParPrio(int* Q,int Qsize,task* T,int newTask)
 {
 	Qsize--;
 	while((Q[Qsize]<0)&&(Qsize>=0))//ignore -1 (empty cases)
@@ -13,6 +13,24 @@ void OrgranisationDeFile(int* Q,int Qsize,task* T,int newTask)
 	}
 	Q[Qsize+1]=newTask;//fix the newbie in the position he is at
 }
+void OrgranisationSJF(int* Q,int Qsize,task* T,int newTask)
+{
+	Qsize--;
+	while((Q[Qsize]<0)&&(Qsize>=0))//ignore -1 (empty cases)
+		Qsize--;
+	while((Qsize>=0)&&((T+Q[Qsize])->length>(T+newTask)->length))//if case below newbi have lower prio(bigger prio number)
+	{
+		Q[Qsize+1]=Q[Qsize];//move lower case up
+		Qsize--;//compare newbie with the new lewer case
+	}
+	Q[Qsize+1]=newTask;//fix the newbie in the position he is at
+}
+void OrgranisationFCFS(int* Q,int newTask)
+{
+	int i;
+	for(i=1;Q[i]>=0;i++);
+	Q[i]=newTask;
+}
 void QueueDown(int* Q,int Qsize)
 {
 	int i;
@@ -21,9 +39,9 @@ void QueueDown(int* Q,int Qsize)
 		Q[i]=Q[i+1];
 	Q[i]=-1;
 }
-void SJF(task* T_tasks,int tasksNumber, int preemption)
+void scheduling(task* T_tasks,int tasksNumber,int algorithm ,int preemption)
 {
-	int i,Pos=0;
+	int i,Pos=0,takeThisToES=-1;
 	int debutDeFile,continueTasks;//bool
 	CPUtable CPU;
 	FILE* outputFile;
@@ -34,25 +52,15 @@ void SJF(task* T_tasks,int tasksNumber, int preemption)
 		*(CPU.entreeSortie+i)=-1;
 		*(CPU.fileAttente+i)=-1;
 	}
+	outputFile=createFile(algorithm,preemption);
 	if (preemption)
-	{
-		outputFile=fopen("SFJavecPreemption","w+");
 		debutDeFile=0;
-	}
 	else
-	{
-		outputFile=fopen("SFJsansPreemption","w+");
 		debutDeFile=1;
-	}
 	fileInitialisation(outputFile, (2*tasksNumber));
 	do
 	{
 		/*ACTUAL CODE START HERE */
-		for(i=0;i<tasksNumber;i++)
-		{
-			if((T_tasks+i)->entry==Pos)// entrée des nouvelles taches à la liste d'attente
-				OrgranisationDeFile((CPU.fileAttente+debutDeFile),(tasksNumber-debutDeFile),T_tasks,i);
-		}
 		if(CPU.entreeSortie[0]>=0)// s'il y une tache en E/S
 		{
 			(T_tasks+CPU.entreeSortie[0])->inOutLength--;//reduire sa durée de ES de 1
@@ -72,7 +80,24 @@ void SJF(task* T_tasks,int tasksNumber, int preemption)
 				QueueDown(CPU.fileAttente,tasksNumber);
 			}
 		}
-		else
+		for(i=0;i<tasksNumber;i++)//On verifie s'il y a des nouvelles taches
+		{
+			if((T_tasks+i)->entry==Pos)// entrée des nouvelles taches à la liste d'attente
+			{
+				switch(algorithm) {
+				case 1 :
+					OrgranisationFCFS(CPU.fileAttente,i);
+				break;
+				case 2 :
+					OrgranisationSJF((CPU.fileAttente+debutDeFile),(tasksNumber-debutDeFile),T_tasks,i);
+				break;
+				case 3 :
+					OrgranisationParPrio((CPU.fileAttente+debutDeFile),(tasksNumber-debutDeFile),T_tasks,i);
+				break;
+				}
+			}
+		}
+		if(CPU.fileAttente[0]<0)
             QueueDown(CPU.fileAttente,tasksNumber);
 		continueTasks=0;
 		i=0;
