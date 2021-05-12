@@ -1,7 +1,9 @@
 #ifndef CPUmanagement
 #define CPUmanagement
 #include "FilesManipulation.h"
-void OrgranisationDeFile(int* Q,int Qsize,task* T,int newTask);
+void OrgranisationParPrio(int* Q,int Qsize,task* T,int newTask);
+void OrgranisationSJF(int* Q,int Qsize,task* T,int newTask);
+void OrgranisationFCFS(int* Q,int newTask);
 void QueueDown(int* Q,int Qsize);
-void SJF(task* T_tasks,int tasksNumber, int preemption);
+void scheduling(task* T_tasks,int tasksNumber,int algorithm ,int preemption);
 #endif
