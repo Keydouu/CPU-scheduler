@@ -65,17 +65,23 @@ void scheduling(task* T_tasks,int tasksNumber,int algorithm ,int preemption)
 		{
 			(T_tasks+CPU.entreeSortie[0])->inOutLength--;//reduire sa durée de ES de 1
 			if((T_tasks+CPU.entreeSortie[0])->inOutLength==0)//si la tache se termine
-				QueueDown(CPU.entreeSortie,tasksNumber);
+            		{
+                		(T_tasks+CPU.entreeSortie[0])->tSejour=Pos-(T_tasks+CPU.entreeSortie[0])->entry;
+                		QueueDown(CPU.entreeSortie,tasksNumber);
+            		}
 		}
 		if(CPU.fileAttente[0]>=0)//s'il y a une tache active
 		{
+			if((T_tasks+CPU.fileAttente[0])->tReponse<0)
+                		(T_tasks+CPU.fileAttente[0])->tReponse=Pos-((T_tasks+CPU.fileAttente[0])->entry)-1;
 			(T_tasks+CPU.fileAttente[0])->length--;//on reduit sa durée d'execution de 1
 			if((T_tasks+CPU.fileAttente[0])->length==0)//si la tache se termine
 			{
+				(T_tasks+CPU.fileAttente[0])->tSejour=Pos-(T_tasks+CPU.fileAttente[0])->entry;
 				if((T_tasks+CPU.fileAttente[0])->inOutLength>0)//si elle a une durée d'entrée sortie
 				{
 					for(i=0;CPU.entreeSortie[i]>=0;i++);//on cherche la celule libre en E/S
-					CPU.entreeSortie[i]=CPU.fileAttente[0];//on y met la tache qui était active
+                        		CPU.entreeSortie[i]=CPU.fileAttente[0];//on y met la tache qui était active
 				}
 				QueueDown(CPU.fileAttente,tasksNumber);
 			}
@@ -98,8 +104,13 @@ void scheduling(task* T_tasks,int tasksNumber,int algorithm ,int preemption)
 			}
 		}
 		if(CPU.fileAttente[0]<0)
-			QueueDown(CPU.fileAttente,tasksNumber);
+            		QueueDown(CPU.fileAttente,tasksNumber);
 		continueTasks=0;
+		for(i=1;i<tasksNumber;i++)
+		{
+            		if(CPU.fileAttente[i]>=0)
+                	(T_tasks+CPU.fileAttente[i])->tAttente++;
+		}
 		i=0;
 		while((i<tasksNumber)&&(continueTasks==0))
 		{
@@ -136,24 +147,31 @@ void RR(task* T_tasks,int tasksNumber)
 		if(inOutTime>0)// s'il y une tache en E/S
 		{
 			inOutTime--;
-            if(inOutTime==0)
-          		{
+            		if(inOutTime==0)
+           		{
 				if((T_tasks+CPU.entreeSortie[0])->length>0)
-                    lateEntry2=CPU.entreeSortie[0];
+                		{
+                    			lateEntry2=CPU.entreeSortie[0];
+                    			(T_tasks+CPU.entreeSortie[0])->tSejour=Pos-(T_tasks+CPU.entreeSortie[0])->entry;
+				}
 				QueueDown(CPU.entreeSortie,tasksNumber);
+				
 				if(CPU.entreeSortie[0]>=0)
                    			 inOutTime=(T_tasks+CPU.entreeSortie[0])->inOutLength;
-                }
+            		}
 		}
 
 		if((CPU.fileAttente[0]>=0)&&(actualCycle==0))//s'il y a une tache active
           		  actualCycle=(T_tasks+CPU.fileAttente[0])->cycle;
         	if(actualCycle)
 		{
+			if((T_tasks+CPU.fileAttente[0])->tReponse<0)
+                		(T_tasks+CPU.fileAttente[0])->tReponse=Pos-((T_tasks+CPU.fileAttente[0])->entry)-1;
 			actualCycle--;
 			(T_tasks+CPU.fileAttente[0])->length--;//on reduit sa durée d'execution de 1
 			if((T_tasks+CPU.fileAttente[0])->length==0)//si la tache se termine
 			{
+				(T_tasks+CPU.fileAttente[0])->tSejour=Pos-(T_tasks+CPU.fileAttente[0])->entry;
 				actualCycle=0;
 				if((T_tasks+CPU.fileAttente[0])->inOutLength>0)//si elle a une durée d'entrée sortie
 				{
@@ -164,25 +182,25 @@ void RR(task* T_tasks,int tasksNumber)
 				}
 				QueueDown(CPU.fileAttente,tasksNumber);
 			}
-			else if(actualCycle==0)
+			else if(actualCycle==0)//si le cycle se termine
 			{
                 		i=0;
                 		while((i<tasksNumber)&&((T_tasks+i)->entry!=Pos))
-                   			i++;
-             			if((i==tasksNumber)&&(inOutTime==0)&&(CPU.fileAttente[1]<0))
-					actualCycle=(T_tasks+CPU.fileAttente[0])->cycle;
-                		else
-                		{
+                    			i++;
+                		if((i==tasksNumber)&&(inOutTime==0)&&(CPU.fileAttente[1]<0))
+                    			actualCycle=(T_tasks+CPU.fileAttente[0])->cycle;
+				else
+              			{
                 			if((T_tasks+CPU.fileAttente[0])->inOutLength>0)//si elle a une durée d'entrée sortie
 					{
 						for(i=0;CPU.entreeSortie[i]>=0;i++);//on cherche la celule libre en E/S
-							CPU.entreeSortie[i]=CPU.fileAttente[0];//on y met la tache qui était active
+                    				CPU.entreeSortie[i]=CPU.fileAttente[0];//on y met la tache qui était active
 						if(i==0)
 							inOutTime=(T_tasks+CPU.fileAttente[0])->inOutLength;
 					}
 					else
-                    				lateEntry=CPU.fileAttente[0];
-               				QueueDown(CPU.fileAttente,tasksNumber);
+                				lateEntry=CPU.fileAttente[0];
+                			QueueDown(CPU.fileAttente,tasksNumber);
                 		}
 			}
 		}
@@ -193,17 +211,22 @@ void RR(task* T_tasks,int tasksNumber)
 		}
 		if(lateEntry>=0)
 		{
-         		OrgranisationFCFS(CPU.fileAttente,lateEntry);
-        		lateEntry=-1;
+          		  OrgranisationFCFS(CPU.fileAttente,lateEntry);
+           		 lateEntry=-1;
 		}
 		if(lateEntry2>=0)
 		{
             		OrgranisationFCFS(CPU.fileAttente,lateEntry2);
-           		lateEntry2=-1;
+            		lateEntry2=-1;
 		}
 		if(CPU.fileAttente[0]<0)
 			QueueDown(CPU.fileAttente,tasksNumber);
 		continueTasks=0;
+		for(i=1;i<tasksNumber;i++)
+		{
+           		if(CPU.fileAttente[i]>=0)
+               			(T_tasks+CPU.fileAttente[i])->tAttente++;
+		}
 		i=0;
 		if(inOutTime>0)
 		continueTasks=1;
