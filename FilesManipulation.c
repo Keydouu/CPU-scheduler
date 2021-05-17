@@ -74,13 +74,15 @@ void openWhenDone(int Algorithm, int preemption)
 }
 void fileInitialisation(FILE* fp, int numberOfLines)
 {
-    char c;
-    c='\n';
-    while(numberOfLines>0)
+    char c='\n';
+    int i;
+    for(i=0;i<(numberOfLines-1);i++)
     {
+        if(i==(numberOfLines/2-1))
+            fprintf(fp,"file d'attente");
         fputc(c,fp);
-        numberOfLines--;
     }
+    fprintf(fp,"file d'attente");
 }
 void GoToLine(FILE* fp,int lineNumber)
 {
@@ -209,19 +211,39 @@ void writeFromCPUtoFile(FILE* fichier,task* T_tasks,CPUtable CPU,int Qsize)
 }
 void finalTouch(FILE* fp,task* T_tasks,int tasksNumber,int pos)
 {
-    char line1[]="Entree/sortie";
-    char line2[]="file d'attente";
-    char ch;
-    int i;
-    GoToLine(fp,(tasksNumber-1));
-    ch=fgetc(fp);
-    writeInMiddleOfFile(fp,line1,13);
-    GoToLine(fp,(2*tasksNumber-1));
-    ch=fgetc(fp);
-    writeInMiddleOfFile(fp,line2,14);
+    int i,moyenne;
     fseek( fp, 0, SEEK_END );
-    fprintf(fp,"\n,,");
+    fprintf(fp,"\n,");
     for(i=0;i<(pos-1);i++)
         fprintf(fp,"%d,",i);
-    fprintf(fp,"\n\n,Debit,%d/%d",tasksNumber,pos);
+    fprintf(fp,"\n\nDebit,%d/%d",tasksNumber,pos);
+    fprintf(fp,"\n,");
+    for(i=0;i<tasksNumber;i++)
+        fprintf(fp,"%s,",(T_tasks+i)->Name);
+    fprintf(fp,"Moy");
+    moyenne=0;
+    fprintf(fp,"\ntemps de séjour,");
+    for(i=0;i<tasksNumber;i++)
+    {
+        fprintf(fp,"%d,",(T_tasks+i)->tSejour);
+        moyenne+=(T_tasks+i)->tSejour;
+    }
+    fprintf(fp,"=%d/%d,",moyenne,tasksNumber);
+    moyenne=0;
+    fprintf(fp,"\ntemps d’attente,");
+    for(i=0;i<tasksNumber;i++)
+    {
+        fprintf(fp,"%d,",(T_tasks+i)->tAttente);
+        moyenne+=(T_tasks+i)->tAttente;
+    }
+    fprintf(fp,"=%d/%d,",moyenne,tasksNumber);
+    moyenne=0;
+    fprintf(fp,"\ntemps de réponse,");
+    for(i=0;i<tasksNumber;i++)
+    {
+        fprintf(fp,"%d,",(T_tasks+i)->tReponse);
+        moyenne+=(T_tasks+i)->tReponse;
+    }
+    fprintf(fp,"=%d/%d,",moyenne,tasksNumber);
 }
+
