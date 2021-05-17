@@ -6,25 +6,71 @@ FILE* createFile(int Algorithm, int preemption)
     FILE* fp=NULL;
     switch(Algorithm) {
       case 1 :
-            fp=fopen("FCFS","w+");
+            fp=fopen("FCFS.xlsx","w+");
          break;
       case 2 :
         if (preemption)
-            fp=fopen("SFJavecPreemption","w+");
+            fp=fopen("SFJavecPreemption.xlsx","w+");
         else
-            fp=fopen("SFJsansPreemption","w+");
+            fp=fopen("SFJsansPreemption.xlsx","w+");
          break;
       case 3 :
         if (preemption)
-            fp=fopen("PrioavecPreemption","w+");
+            fp=fopen("PrioavecPreemption.xlsx","w+");
         else
-            fp=fopen("PriosansPreemption","w+");
+            fp=fopen("PriosansPreemption.xlsx","w+");
          break;
       case 4 :
-	    fp=fopen("Round Robin","w+");
+            fp=fopen("RoundRobin.xlsx","w+");
          break;
-   }
+    }
     return fp;
+}
+void openWhenDone(int Algorithm, int preemption)
+{
+    #if defined(_WIN32) || defined(WIN32)
+    switch(Algorithm) {
+      case 1 :
+            system("open FCFS.xlsx");
+         break;
+      case 2 :
+        if (preemption)
+            system("open SFJavecPreemption.xlsx");
+        else
+            system("open SFJsansPreemption.xlsx");
+         break;
+      case 3 :
+        if (preemption)
+            system("open PrioavecPreemption.xlsx");
+        else
+            system("open PriosansPreemption.xlsx");
+         break;
+      case 4 :
+            system("open RoundRobin.xlsx");
+         break;
+    }
+    #else
+	switch(Algorithm) {
+      case 1 :
+            system("xdg-open FCFS.xlsx");
+         break;
+      case 2 :
+        if (preemption)
+            system("xdg-open SFJavecPreemption.xlsx");
+        else
+            system("xdg-open SFJsansPreemption.xlsx");
+         break;
+      case 3 :
+        if (preemption)
+            system("xdg-open PrioavecPreemption.xlsx");
+        else
+            system("xdg-open PriosansPreemption.xlsx");
+         break;
+      case 4 :
+            system("xdg-open RoundRobin.xlsx");
+         break;
+    }
+    #endif
 }
 void fileInitialisation(FILE* fp, int numberOfLines)
 {
