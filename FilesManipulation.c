@@ -31,22 +31,22 @@ void openWhenDone(int Algorithm, int preemption)
     #if defined(_WIN32) || defined(WIN32)
     switch(Algorithm) {
       case 1 :
-            system("open FCFS.xlsx");
+            system("FCFS.xlsx");
          break;
       case 2 :
         if (preemption)
-            system("open SFJavecPreemption.xlsx");
+            system("SFJavecPreemption.xlsx");
         else
-            system("open SFJsansPreemption.xlsx");
+            system("SFJsansPreemption.xlsx");
          break;
       case 3 :
         if (preemption)
-            system("open PrioavecPreemption.xlsx");
+            system("PrioavecPreemption.xlsx");
         else
-            system("open PriosansPreemption.xlsx");
+            system("PriosansPreemption.xlsx");
          break;
       case 4 :
-            system("open RoundRobin.xlsx");
+            system("RoundRobin.xlsx");
          break;
     }
     #else
