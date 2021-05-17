@@ -90,7 +90,7 @@ int numberOfTasks(FILE* fichier)
 	int i=0;
 	char c=10;
 	rewind(fichier);
-	while(c!=EOF)
+	while((c!=EOF)&&(c!='/'))
 	{
 		c=fgetc(fichier);
 		if (c==';')
