@@ -112,7 +112,9 @@ void scheduling(task* T_tasks,int tasksNumber,int algorithm ,int preemption)
 	}while(continueTasks);
 	free(CPU.entreeSortie);
 	free(CPU.fileAttente);
+	finalTouch(outputFile, T_tasks,tasksNumber,Pos);
 	fclose(outputFile);
+	openWhenDone(algorithm,preemption);
 }
 void RR(task* T_tasks,int tasksNumber)
 {
@@ -216,5 +218,7 @@ void RR(task* T_tasks,int tasksNumber)
 	}while(continueTasks);
 	free(CPU.entreeSortie);
 	free(CPU.fileAttente);
+	finalTouch(outputFile, T_tasks,tasksNumber,Pos);
 	fclose(outputFile);
+	openWhenDone(4,0);
 }
