@@ -21,10 +21,7 @@ FILE* createFile(int Algorithm, int preemption)
             fp=fopen("PriosansPreemption","w+");
          break;
       case 4 :
-        if (preemption)
-            fp=fopen("RRavecPreemption","w+");
-        else
-            fp=fopen("RRsansPreemption","w+");
+	    fp=fopen("Round Robin","w+");
          break;
    }
     return fp;
