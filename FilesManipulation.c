@@ -49,11 +49,6 @@ void GoToLine(FILE* fp,int lineNumber)
 	if(c!=EOF)
         fseek(fp,-1,SEEK_CUR);
 }
-int fileSize(FILE* f,int sizeOfVariable)
-{
-	fseek(f,0,SEEK_END);
-	return (ftell(f)/sizeOfVariable);
-}
 void writeInMiddleOfFile(FILE* fp, char* charTable, int charTableSize)
 {
     char* memory;
