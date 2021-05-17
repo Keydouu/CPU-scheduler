@@ -161,3 +161,21 @@ void writeFromCPUtoFile(FILE* fichier,task* T_tasks,CPUtable CPU,int Qsize)
 		}
 	}
 }
+void finalTouch(FILE* fp,task* T_tasks,int tasksNumber,int pos)
+{
+    char line1[]="Entree/sortie";
+    char line2[]="file d'attente";
+    char ch;
+    int i;
+    GoToLine(fp,(tasksNumber-1));
+    ch=fgetc(fp);
+    writeInMiddleOfFile(fp,line1,13);
+    GoToLine(fp,(2*tasksNumber-1));
+    ch=fgetc(fp);
+    writeInMiddleOfFile(fp,line2,14);
+    fseek( fp, 0, SEEK_END );
+    fprintf(fp,"\n,,");
+    for(i=0;i<(pos-1);i++)
+        fprintf(fp,"%d,",i);
+    fprintf(fp,"\n\n,Debit,%d/%d",tasksNumber,pos);
+}
