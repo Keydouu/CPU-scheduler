@@ -43,6 +43,12 @@ int main()
 	
 	scheduling(T_tasks,tasksNumber,3,1);
 	
+	rewind(inputFile);
+	for(i=0;i<tasksNumber;i++)
+		*(T_tasks+i)=tasksReader(inputFile);
+
+    	RR(T_tasks,tasksNumber);
+	
 	fclose(inputFile);
 	return 0;
 }
