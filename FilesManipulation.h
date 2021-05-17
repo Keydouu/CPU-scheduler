@@ -5,7 +5,8 @@ typedef struct CPUtable CPUtable;
 struct task
 {
 	char Name[3];
-	int entry,length,priority,inOutLength;
+	int entry,length,priority,inOutLength,cycle;
+	int tSejour, tAttente, tReponse;
 };
 struct CPUtable
 {
