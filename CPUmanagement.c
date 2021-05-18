@@ -187,7 +187,7 @@ void RR(task* T_tasks,int tasksNumber)
                 		i=0;
                 		while((i<tasksNumber)&&((T_tasks+i)->entry!=Pos))
                     			i++;
-                		if((i==tasksNumber)&&(inOutTime==0)&&(CPU.fileAttente[1]<0))
+                		if((i==tasksNumber)&&(inOutTime==0)&&(CPU.fileAttente[1]<0)&&(lateEntry2<0))
                     			actualCycle=(T_tasks+CPU.fileAttente[0])->cycle;
 				else
               			{
