@@ -10,9 +10,9 @@ FILE* createFile(int Algorithm, int preemption)
          break;
       case 2 :
         if (preemption)
-            fp=fopen("SFJavecPreemption.xlsx","w+");
+            fp=fopen("SJFavecPreemption.xlsx","w+");
         else
-            fp=fopen("SFJsansPreemption.xlsx","w+");
+            fp=fopen("SJFsansPreemption.xlsx","w+");
          break;
       case 3 :
         if (preemption)
@@ -35,9 +35,9 @@ void openWhenDone(int Algorithm, int preemption)
          break;
       case 2 :
         if (preemption)
-            system("SFJavecPreemption.xlsx");
+            system("SJFavecPreemption.xlsx");
         else
-            system("SFJsansPreemption.xlsx");
+            system("SJFsansPreemption.xlsx");
          break;
       case 3 :
         if (preemption)
@@ -56,9 +56,9 @@ void openWhenDone(int Algorithm, int preemption)
          break;
       case 2 :
         if (preemption)
-            system("xdg-open SFJavecPreemption.xlsx");
+            system("xdg-open SJFavecPreemption.xlsx");
         else
-            system("xdg-open SFJsansPreemption.xlsx");
+            system("xdg-open SJFsansPreemption.xlsx");
          break;
       case 3 :
         if (preemption)
